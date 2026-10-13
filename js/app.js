@@ -63,14 +63,38 @@ const CONFIG = {
 };
 
 /* --------------------------------------------------------------------------
-   3. CATÁLOGO DE PRODUCTOS & CATEGORÍAS
+   3. ICONOS & EMOJIS (SECUENCIAS UNICODE SEGURAS)
+   -------------------------------------------------------------------------- */
+const ICONS = {
+  coffee: '\u2615',          // ☕
+  sparkles: '\u2728',        // ✨
+  sandwich: '\u{1F96A}',     // 🥪
+  croissant: '\u{1F950}',    // 🥐
+  star: '\u2B50',            // ⭐
+  scooter: '\u{1F6F5}',      // 🛵
+  plate: '\u{1F37D}\uFE0F',   // 🍽️
+  user: '\u{1F464}',         // 👤
+  phone: '\u{1F4F1}',        // 📱
+  tag: '\u{1F3F7}\uFE0F',    // 🏷️
+  house: '\u{1F3E0}',        // 🏠
+  pin: '\u{1F4CD}',          // 📍
+  card: '\u{1F4B3}',         // 💳
+  clipboard: '\u{1F4CB}',    // 📋
+  cart: '\u{1F6D2}',         // 🛒
+  moneyBag: '\u{1F4B0}',     // 💰
+  memo: '\u{1F4DD}',         // 📝
+  check: '\u2713',           // ✓
+};
+
+/* --------------------------------------------------------------------------
+   4. CATÁLOGO DE PRODUCTOS & CATEGORÍAS
    -------------------------------------------------------------------------- */
 const CATEGORIES = [
-  { id: 'todos', name: 'Todos', icon: '✨' },
-  { id: 'cafes', name: 'Cafés & Bebidas', icon: '☕' },
-  { id: 'comidas', name: 'Comidas / Platos', icon: '🥪' },
-  { id: 'postres', name: 'Postres', icon: '🥐' },
-  { id: 'especiales', name: 'Especiales', icon: '⭐' },
+  { id: 'todos', name: 'Todos', icon: ICONS.sparkles },
+  { id: 'cafes', name: 'Cafés & Bebidas', icon: ICONS.coffee },
+  { id: 'comidas', name: 'Comidas / Platos', icon: ICONS.sandwich },
+  { id: 'postres', name: 'Postres', icon: ICONS.croissant },
+  { id: 'especiales', name: 'Especiales', icon: ICONS.star },
 ];
 
 const PRODUCTS = [
@@ -741,17 +765,17 @@ function submitOrderToWhatsApp() {
   if (hasError) return;
 
   // Construcción del mensaje para WhatsApp
-  const modalityText = state.orderType === 'delivery' ? '🛵 A Domicilio' : '🍽️ En Mesa / Local';
-  const locationLabel = state.orderType === 'delivery' ? '🏠 Dirección:' : '📍 Mesa / Ubicación:';
+  const modalityText = state.orderType === 'delivery' ? `${ICONS.scooter} A Domicilio` : `${ICONS.plate} En Mesa / Local`;
+  const locationLabel = state.orderType === 'delivery' ? `${ICONS.house} Dirección:` : `${ICONS.pin} Mesa / Ubicación:`;
 
-  let message = `☕ *¡HOLA ${CONFIG.businessName.toUpperCase()}! NUEVO PEDIDO* ☕\n\n`;
-  message += `👤 *Cliente:* ${nameVal}\n`;
-  if (phoneVal) message += `📱 *Teléfono:* ${phoneVal}\n`;
-  message += `🏷️ *Modalidad:* ${modalityText}\n`;
+  let message = `${ICONS.coffee} *¡HOLA ${CONFIG.businessName.toUpperCase()}! NUEVO PEDIDO* ${ICONS.coffee}\n\n`;
+  message += `${ICONS.user} *Cliente:* ${nameVal}\n`;
+  if (phoneVal) message += `${ICONS.phone} *Teléfono:* ${phoneVal}\n`;
+  message += `${ICONS.tag} *Modalidad:* ${modalityText}\n`;
   message += `${locationLabel} ${addressVal}\n`;
-  message += `💳 *Método de Pago:* ${paymentVal}\n\n`;
+  message += `${ICONS.card} *Método de Pago:* ${paymentVal}\n\n`;
 
-  message += `📋 *DETALLE DEL PEDIDO:*\n`;
+  message += `${ICONS.clipboard} *DETALLE DEL PEDIDO:*\n`;
   for (const [id, qty] of Object.entries(state.cart)) {
     const prod = PRODUCTS.find((p) => p.id === id);
     if (prod && qty > 0) {
@@ -761,15 +785,15 @@ function submitOrderToWhatsApp() {
   }
 
   if (notesVal) {
-    message += `\n📝 *Instrucciones:* ${notesVal}\n`;
+    message += `\n${ICONS.memo} *Instrucciones:* ${notesVal}\n`;
   }
 
   message += `\n------------------------------\n`;
-  message += `🛒 *Subtotal:* ${formatCOP(subtotal)}\n`;
+  message += `${ICONS.cart} *Subtotal:* ${formatCOP(subtotal)}\n`;
   if (state.orderType === 'delivery') {
-    message += `🛵 *Costo de Envío:* ${formatCOP(shipping)}\n`;
+    message += `${ICONS.scooter} *Costo de Envío:* ${formatCOP(shipping)}\n`;
   }
-  message += `💰 *TOTAL A PAGAR:* *${formatCOP(total)}*\n`;
+  message += `${ICONS.moneyBag} *TOTAL A PAGAR:* *${formatCOP(total)}*\n`;
   message += `------------------------------\n`;
   message += `_Pedido enviado desde la web oficial de ${CONFIG.businessName}._`;
 
