@@ -798,7 +798,8 @@ function submitOrderToWhatsApp() {
   message += `_Pedido enviado desde la web oficial de ${CONFIG.businessName}._`;
 
   const encodedMsg = encodeURIComponent(message);
-  const whatsappUrl = `https://wa.me/${CONFIG.whatsappNumber}?text=${encodedMsg}`;
+  // Usar el endpoint directo oficial api.whatsapp.com para evitar el bug de redirección de wa.me que corrompe emojis UTF-8
+  const whatsappUrl = `https://api.whatsapp.com/send/?phone=${CONFIG.whatsappNumber}&text=${encodedMsg}`;
 
   window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
 }
